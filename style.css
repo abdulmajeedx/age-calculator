@@ -643,4 +643,188 @@ body {
     .copyright {
         font-size: 1.1rem;
     }
+    
+    .countdown-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* أنماط قسم العد التنازلي للمواعيد */
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.countdown-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+}
+
+.countdown-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: height 0.3s ease;
+}
+
+.countdown-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.countdown-card:hover::before {
+    height: 8px;
+}
+
+/* ألوان مخصصة لكل كرت */
+.countdown-card.payment::before {
+    background: linear-gradient(90deg, #00c853 0%, #64dd17 100%);
+}
+
+.countdown-card.salary::before {
+    background: linear-gradient(90deg, #ffd600 0%, #ffab00 100%);
+}
+
+.countdown-card.weekend::before {
+    background: linear-gradient(90deg, #00bcd4 0%, #00acc1 100%);
+}
+
+.countdown-card.ramadan::before {
+    background: linear-gradient(90deg, #9c27b0 0%, #7b1fa2 100%);
+}
+
+.countdown-card.newyear::before {
+    background: linear-gradient(90deg, #f44336 0%, #e91e63 100%);
+}
+
+.countdown-card.hijriyear::before {
+    background: linear-gradient(90deg, #3f51b5 0%, #5c6bc0 100%);
+}
+
+.countdown-icon {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 15px;
+    animation: bounce 2s ease infinite;
+}
+
+.countdown-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.countdown-details {
+    text-align: center;
+}
+
+.countdown-main {
+    margin-bottom: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.countdown-big-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    display: block;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    animation: pulse 2s ease infinite;
+}
+
+.countdown-big-label {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.9);
+    display: block;
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.countdown-sub {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 15px 0;
+    font-weight: 600;
+}
+
+.countdown-sub span {
+    color: #667eea;
+    font-weight: 700;
+}
+
+.countdown-date {
+    font-size: 1rem;
+    color: #888;
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.countdown-date span {
+    color: #667eea;
+    font-weight: 700;
+}
+
+/* تأثيرات إضافية */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* تحسينات الاستجابة */
+@media (max-width: 768px) {
+    .countdown-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .countdown-card {
+        padding: 20px;
+    }
+    
+    .countdown-icon {
+        font-size: 3rem;
+    }
+    
+    .countdown-big-number {
+        font-size: 2.5rem;
+    }
+    
+    .countdown-card h3 {
+        font-size: 1.3rem;
+    }
 }

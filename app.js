@@ -250,6 +250,183 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
+// دوال حساب المواعيد المالية والحكومية
+function calculateCitizenAccountPayment() {
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    // حساب المواطن يصرف في اليوم 10 من كل شهر
+    let paymentDate = new Date(currentYear, currentMonth, 10);
+    
+    // إذا كان اليوم الحالي بعد يوم الصرف، ننتقل للشهر التالي
+    if (currentDay >= 10) {
+        paymentDate = new Date(currentYear, currentMonth + 1, 10);
+    }
+    
+    const diffTime = paymentDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+    const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+    
+    return {
+        date: paymentDate,
+        days: diffDays,
+        hours: diffHours,
+        minutes: diffMinutes,
+        name: 'حساب المواطن'
+    };
+}
+
+function calculateSalaryPayment() {
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    // الراتب يصرف في نهاية الشهر (27)
+    let paymentDate = new Date(currentYear, currentMonth, 27);
+    
+    // إذا كان اليوم الحالي بعد يوم الصرف، ننتقل للشهر التالي
+    if (currentDay >= 27) {
+        paymentDate = new Date(currentYear, currentMonth + 1, 27);
+    }
+    
+    const diffTime = paymentDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+    const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+    
+    return {
+        date: paymentDate,
+        days: diffDays,
+        hours: diffHours,
+        minutes: diffMinutes,
+        name: 'راتب نهاية الشهر'
+    };
+}
+
+function calculateWeekend() {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 = Sunday, 6 = Saturday
+    
+    // حساب أيام حتى الجمعة (5)
+    let daysUntilFriday = (5 - currentDay + 7) % 7;
+    if (daysUntilFriday === 0 && today.getHours() >= 12) {
+        daysUntilFriday = 7;
+    }
+    
+    const weekendDate = new Date(today);
+    weekendDate.setDate(today.getDate() + daysUntilFriday);
+    
+    const diffTime = weekendDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+    
+    return {
+        date: weekendDate,
+        days: diffDays,
+        hours: diffHours,
+        name: 'عطلة نهاية الأسبوع'
+    };
+}
+
+function calculateRamadan() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    
+    // تقدير تقريبي لبداية رمضان (يتغير كل سنة)
+    // رمضان 1447 هـ يبدأ تقريباً في 1 مارس 2026
+    let ramadanDate;
+    
+    if (currentYear === 2025) {
+        ramadanDate = new Date(2026, 1, 28); // 28 فبراير 2026
+    } else if (currentYear === 2026) {
+        ramadanDate = new Date(2027, 1, 17); // 17 فبراير 2027
+    } else {
+        // حساب تقريبي
+        const hijriYear = Math.floor((currentYear - 622) * 1.03) + 1;
+        const ramadanGregorian = hijriToGregorian(hijriYear + 1, 9, 1);
+        ramadanDate = new Date(ramadanGregorian.year, ramadanGregorian.month - 1, ramadanGregorian.day);
+    }
+    
+    // إذا كان رمضان قد مضى هذا العام، احسب للعام القادم
+    if (ramadanDate < today) {
+        const nextYear = currentYear + 1;
+        const hijriYear = Math.floor((nextYear - 622) * 1.03) + 1;
+        const ramadanGregorian = hijriToGregorian(hijriYear, 9, 1);
+        ramadanDate = new Date(ramadanGregorian.year, ramadanGregorian.month - 1, ramadanGregorian.day);
+    }
+    
+    const diffTime = ramadanDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    
+    return {
+        date: ramadanDate,
+        days: diffDays,
+        weeks: diffWeeks,
+        months: diffMonths,
+        name: 'شهر رمضان المبارك'
+    };
+}
+
+function calculateNewYear() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    
+    let newYearDate = new Date(currentYear + 1, 0, 1); // 1 يناير
+    
+    const diffTime = newYearDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    
+    return {
+        date: newYearDate,
+        days: diffDays,
+        weeks: diffWeeks,
+        months: diffMonths,
+        name: 'السنة الميلادية الجديدة'
+    };
+}
+
+function calculateHijriNewYear() {
+    const today = new Date();
+    const currentGregorian = {
+        year: today.getFullYear(),
+        month: today.getMonth() + 1,
+        day: today.getDate()
+    };
+    
+    const currentHijri = gregorianToHijri(currentGregorian.year, currentGregorian.month, currentGregorian.day);
+    
+    // حساب 1 محرم من السنة الهجرية القادمة
+    const nextHijriYear = currentHijri.year + 1;
+    const hijriNewYearGregorian = hijriToGregorian(nextHijriYear, 1, 1);
+    const hijriNewYearDate = new Date(
+        hijriNewYearGregorian.year,
+        hijriNewYearGregorian.month - 1,
+        hijriNewYearGregorian.day
+    );
+    
+    const diffTime = hijriNewYearDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    
+    return {
+        date: hijriNewYearDate,
+        days: diffDays,
+        weeks: diffWeeks,
+        months: diffMonths,
+        name: 'السنة الهجرية الجديدة',
+        hijriYear: nextHijriYear
+    };
+}
+
 // دالة لعرض النتائج
 function displayResults(birthDate, hijriDate) {
     const resultsDiv = document.getElementById('results');
@@ -483,5 +660,56 @@ document.getElementById('clearBtn').addEventListener('click', function() {
     document.getElementById('results').classList.add('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+// تحديث العد التنازلي للمواعيد المهمة
+function updateCountdowns() {
+    // حساب المواطن
+    const citizen = calculateCitizenAccountPayment();
+    document.getElementById('citizenDays').textContent = formatNumber(citizen.days);
+    document.getElementById('citizenHours').textContent = formatNumber(citizen.hours);
+    document.getElementById('citizenMinutes').textContent = formatNumber(citizen.minutes);
+    document.getElementById('citizenDate').textContent = formatDate(citizen.date);
+    
+    // الراتب
+    const salary = calculateSalaryPayment();
+    document.getElementById('salaryDays').textContent = formatNumber(salary.days);
+    document.getElementById('salaryHours').textContent = formatNumber(salary.hours);
+    document.getElementById('salaryMinutes').textContent = formatNumber(salary.minutes);
+    document.getElementById('salaryDate').textContent = formatDate(salary.date);
+    
+    // عطلة نهاية الأسبوع
+    const weekend = calculateWeekend();
+    document.getElementById('weekendDays').textContent = formatNumber(weekend.days);
+    document.getElementById('weekendHours').textContent = formatNumber(weekend.hours);
+    document.getElementById('weekendDate').textContent = formatDate(weekend.date);
+    
+    // رمضان
+    const ramadan = calculateRamadan();
+    document.getElementById('ramadanDays').textContent = formatNumber(ramadan.days);
+    document.getElementById('ramadanWeeks').textContent = formatNumber(ramadan.weeks);
+    document.getElementById('ramadanMonths').textContent = formatNumber(ramadan.months);
+    document.getElementById('ramadanDate').textContent = formatDate(ramadan.date);
+    
+    // السنة الميلادية الجديدة
+    const newYear = calculateNewYear();
+    document.getElementById('newYearDays').textContent = formatNumber(newYear.days);
+    document.getElementById('newYearWeeks').textContent = formatNumber(newYear.weeks);
+    document.getElementById('newYearMonths').textContent = formatNumber(newYear.months);
+    document.getElementById('newYearDate').textContent = formatDate(newYear.date);
+    
+    // السنة الهجرية الجديدة
+    const hijriYear = calculateHijriNewYear();
+    document.getElementById('hijriYearDays').textContent = formatNumber(hijriYear.days);
+    document.getElementById('hijriYearWeeks').textContent = formatNumber(hijriYear.weeks);
+    document.getElementById('hijriYearMonths').textContent = formatNumber(hijriYear.months);
+    document.getElementById('hijriYearDate').textContent = formatDate(hijriYear.date);
+    document.getElementById('hijriYearLabel').textContent = formatNumber(hijriYear.hijriYear);
+}
+
+// تحديث العد التنازلي كل دقيقة
+setInterval(updateCountdowns, 60000);
+
+// تحديث فوري عند تحميل الصفحة
+updateCountdowns();
 
 console.log('✅ السكربت تم تحميله بنجاح!');

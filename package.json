@@ -1,7 +1,7 @@
 {
   "name": "age-calculator",
-  "version": "2.1.0",
-  "description": "حاسبة عمر شاملة بالتقويمين الميلادي والهجري مع خوارزمية تحويل دقيقة",
+  "version": "2.2.0",
+  "description": "حاسبة عمر شاملة مع عد تنازلي للمواعيد المهمة (حساب المواطن، الراتب، رمضان وأكثر)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
