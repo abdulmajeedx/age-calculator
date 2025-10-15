@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة العمر الشاملة</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📅 حاسبة العمر الشاملة</h1>
+            <p class="subtitle">احسب عمرك بالتفصيل واكتشف معلومات مثيرة عن تاريخ ميلادك</p>
+        </header>
+
+        <div class="input-section">
+            <p class="section-note">💡 أدخل تاريخ ميلادك بالتقويم الميلادي أو الهجري (اختر أحدهما فقط)</p>
+            
+            <!-- التقويم الميلادي -->
+            <div class="input-group calendar-group">
+                <div class="calendar-header">
+                    <h3>📅 التقويم الميلادي</h3>
+                </div>
+                <div id="gregorianSelectors" class="date-selectors">
+                    <div class="select-wrapper">
+                        <label for="day" class="select-label">اليوم</label>
+                        <select id="day" class="date-select">
+                            <option value="">اليوم</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <label for="month" class="select-label">الشهر</label>
+                        <select id="month" class="date-select">
+                            <option value="">الشهر</option>
+                            <option value="1">يناير</option>
+                            <option value="2">فبراير</option>
+                            <option value="3">مارس</option>
+                            <option value="4">أبريل</option>
+                            <option value="5">مايو</option>
+                            <option value="6">يونيو</option>
+                            <option value="7">يوليو</option>
+                            <option value="8">أغسطس</option>
+                            <option value="9">سبتمبر</option>
+                            <option value="10">أكتوبر</option>
+                            <option value="11">نوفمبر</option>
+                            <option value="12">ديسمبر</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <label for="year" class="select-label">السنة</label>
+                        <select id="year" class="date-select">
+                            <option value="">السنة</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="or-divider">
+                <span>أو</span>
+            </div>
+
+            <!-- التقويم الهجري -->
+            <div class="input-group calendar-group">
+                <div class="calendar-header">
+                    <h3>🌙 التقويم الهجري</h3>
+                </div>
+                <div id="hijriSelectors" class="date-selectors">
+                    <div class="select-wrapper">
+                        <label for="hijriDay" class="select-label">اليوم</label>
+                        <select id="hijriDay" class="date-select">
+                            <option value="">اليوم</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <label for="hijriMonth" class="select-label">الشهر</label>
+                        <select id="hijriMonth" class="date-select">
+                            <option value="">الشهر</option>
+                            <option value="1">محرم</option>
+                            <option value="2">صفر</option>
+                            <option value="3">ربيع الأول</option>
+                            <option value="4">ربيع الثاني</option>
+                            <option value="5">جمادى الأولى</option>
+                            <option value="6">جمادى الآخرة</option>
+                            <option value="7">رجب</option>
+                            <option value="8">شعبان</option>
+                            <option value="9">رمضان</option>
+                            <option value="10">شوال</option>
+                            <option value="11">ذو القعدة</option>
+                            <option value="12">ذو الحجة</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <label for="hijriYear" class="select-label">السنة</label>
+                        <select id="hijriYear" class="date-select">
+                            <option value="">السنة</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="calculateBtn" class="calculate-btn">حساب العمر</button>
+                <button id="clearBtn" class="clear-btn">مسح</button>
+            </div>
+        </div>
+
+        <div id="results" class="results hidden">
+            <div class="result-card">
+                <h2>🎂 تاريخ الميلاد</h2>
+                <div class="result-content">
+                    <p><strong>التاريخ الميلادي:</strong> <span id="birthdateDisplay" class="highlight"></span></p>
+                    <p><strong>التاريخ الهجري:</strong> <span id="hijriBirthdateDisplay" class="highlight"></span></p>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h2>📊 العمر بالتفصيل</h2>
+                <div class="result-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="years">0</div>
+                        <div class="stat-label">سنة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-value" id="months">0</div>
+                        <div class="stat-label">شهر</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">☀️</div>
+                        <div class="stat-value" id="days">0</div>
+                        <div class="stat-label">يوم</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">📆</div>
+                        <div class="stat-value" id="weeks">0</div>
+                        <div class="stat-label">أسبوع</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card celebration">
+                <h2>🎉 عيد الميلاد القادم</h2>
+                <div class="result-content">
+                    <p><strong>التاريخ:</strong> <span id="nextBirthdayDate"></span></p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="daysUntilBirthday">0</span>
+                            <span class="countdown-label">يوم</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="weeksUntilBirthday">0</span>
+                            <span class="countdown-label">أسبوع</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-value" id="monthsUntilBirthday">0</span>
+                            <span class="countdown-label">شهر</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card stats">
+                <h2>📈 إحصائيات إضافية</h2>
+                <div class="result-content">
+                    <div class="stat-row">
+                        <span class="stat-icon-small">🌍</span>
+                        <span class="stat-text">إجمالي أيام الحياة:</span>
+                        <span class="stat-number" id="totalDays">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-icon-small">⏰</span>
+                        <span class="stat-text">عدد الساعات:</span>
+                        <span class="stat-number" id="totalHours">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-icon-small">⏱️</span>
+                        <span class="stat-text">عدد الدقائق:</span>
+                        <span class="stat-number" id="totalMinutes">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-icon-small">🎆</span>
+                        <span class="stat-text">الأيام حتى نهاية السنة:</span>
+                        <span class="stat-number" id="daysUntilYearEnd">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-icon-small">🎈</span>
+                        <span class="stat-text">عدد أعياد الميلاد التي مرت:</span>
+                        <span class="stat-number" id="birthdaysPassed">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card info">
+                <h2>🌟 معلومات إضافية</h2>
+                <div class="result-content">
+                    <p><strong>يوم الميلاد:</strong> <span id="birthDayOfWeek"></span></p>
+                    <p><strong>يوم عيد الميلاد القادم:</strong> <span id="nextBirthdayDayOfWeek"></span></p>
+                    <p><strong>برجك الفلكي:</strong> <span id="zodiacSign"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>صُنع بـ ❤️ باستخدام JavaScript</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
