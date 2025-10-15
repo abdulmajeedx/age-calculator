@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار دقة التحويل</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        
+        .test-case {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .test-case.pass {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .test-case.fail {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .test-result {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .value {
+            color: #212529;
+        }
+        
+        .summary {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 18px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار دقة تحويل التقويم</h1>
+        <button onclick="runTests()">▶️ بدء الاختبار</button>
+        <div id="results"></div>
+        <div id="summary" class="summary" style="display: none;"></div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // حالات اختبار معروفة ودقيقة
+        const testCases = [
+            {
+                name: "اختبار 1: 1 محرم 1446 هـ",
+                hijri: { year: 1446, month: 1, day: 1 },
+                expectedGregorian: { year: 2024, month: 7, day: 7 },
+                tolerance: 2 // يسمح بفارق يومين
+            },
+            {
+                name: "اختبار 2: 1 يناير 2024",
+                gregorian: { year: 2024, month: 1, day: 1 },
+                expectedHijri: { year: 1445, month: 6, day: 19 },
+                tolerance: 2
+            },
+            {
+                name: "اختبار 3: 1 رمضان 1445 هـ",
+                hijri: { year: 1445, month: 9, day: 1 },
+                expectedGregorian: { year: 2024, month: 3, day: 11 },
+                tolerance: 2
+            },
+            {
+                name: "اختبار 4: 23 سبتمبر 1932 (تأسيس السعودية)",
+                gregorian: { year: 1932, month: 9, day: 23 },
+                expectedHijri: { year: 1351, month: 3, day: 21 },
+                tolerance: 2
+            },
+            {
+                name: "اختبار 5: 1 يناير 2000",
+                gregorian: { year: 2000, month: 1, day: 1 },
+                expectedHijri: { year: 1420, month: 9, day: 23 },
+                tolerance: 2
+            },
+            {
+                name: "اختبار 6: 1 محرم 1400 هـ",
+                hijri: { year: 1400, month: 1, day: 1 },
+                expectedGregorian: { year: 1979, month: 11, day: 21 },
+                tolerance: 2
+            }
+        ];
+
+        function runTests() {
+            const resultsDiv = document.getElementById('results');
+            const summaryDiv = document.getElementById('summary');
+            resultsDiv.innerHTML = '';
+            
+            let passed = 0;
+            let failed = 0;
+
+            testCases.forEach((test, index) => {
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test-case';
+                
+                let result = '';
+                let isPass = false;
+
+                if (test.hijri) {
+                    // اختبار التحويل من هجري إلى ميلادي
+                    const converted = hijriToGregorian(test.hijri.year, test.hijri.month, test.hijri.day);
+                    const yearDiff = Math.abs(converted.year - test.expectedGregorian.year);
+                    const monthDiff = Math.abs(converted.month - test.expectedGregorian.month);
+                    const dayDiff = Math.abs(converted.day - test.expectedGregorian.day);
+                    
+                    isPass = yearDiff === 0 && monthDiff === 0 && dayDiff <= test.tolerance;
+                    
+                    result = `
+                        <div class="test-result"><span class="label">التاريخ الهجري:</span> <span class="value">${test.hijri.day}/${test.hijri.month}/${test.hijri.year}</span></div>
+                        <div class="test-result"><span class="label">النتيجة:</span> <span class="value">${converted.day}/${converted.month}/${converted.year}</span></div>
+                        <div class="test-result"><span class="label">المتوقع:</span> <span class="value">${test.expectedGregorian.day}/${test.expectedGregorian.month}/${test.expectedGregorian.year}</span></div>
+                        <div class="test-result"><span class="label">الفرق:</span> <span class="value">${dayDiff} يوم</span></div>
+                    `;
+                } else if (test.gregorian) {
+                    // اختبار التحويل من ميلادي إلى هجري
+                    const converted = gregorianToHijri(test.gregorian.year, test.gregorian.month, test.gregorian.day);
+                    const yearDiff = Math.abs(converted.year - test.expectedHijri.year);
+                    const monthDiff = Math.abs(converted.month - test.expectedHijri.month);
+                    const dayDiff = Math.abs(converted.day - test.expectedHijri.day);
+                    
+                    isPass = yearDiff === 0 && monthDiff === 0 && dayDiff <= test.tolerance;
+                    
+                    result = `
+                        <div class="test-result"><span class="label">التاريخ الميلادي:</span> <span class="value">${test.gregorian.day}/${test.gregorian.month}/${test.gregorian.year}</span></div>
+                        <div class="test-result"><span class="label">النتيجة:</span> <span class="value">${converted.day}/${converted.month}/${converted.year}</span></div>
+                        <div class="test-result"><span class="label">المتوقع:</span> <span class="value">${test.expectedHijri.day}/${test.expectedHijri.month}/${test.expectedHijri.year}</span></div>
+                        <div class="test-result"><span class="label">الفرق:</span> <span class="value">${dayDiff} يوم</span></div>
+                    `;
+                }
+
+                testDiv.innerHTML = `
+                    <h3>${test.name} ${isPass ? '✅' : '❌'}</h3>
+                    ${result}
+                `;
+                testDiv.classList.add(isPass ? 'pass' : 'fail');
+                resultsDiv.appendChild(testDiv);
+
+                if (isPass) passed++;
+                else failed++;
+            });
+
+            summaryDiv.innerHTML = `
+                <h2>📊 النتيجة النهائية</h2>
+                <p>✅ نجح: ${passed} اختبار</p>
+                <p>❌ فشل: ${failed} اختبار</p>
+                <p>📈 نسبة النجاح: ${((passed / testCases.length) * 100).toFixed(1)}%</p>
+            `;
+            summaryDiv.style.display = 'block';
+            
+            console.log(`✅ نجح: ${passed}/${testCases.length}`);
+            console.log(`❌ فشل: ${failed}/${testCases.length}`);
+        }
+    </script>
+</body>
+</html>

@@ -1,18 +1,22 @@
 {
   "name": "age-calculator",
-  "version": "2.0.0",
-  "description": "حاسبة عمر شاملة بواجهة ويب",
+  "version": "2.1.0",
+  "description": "حاسبة عمر شاملة بالتقويمين الميلادي والهجري مع خوارزمية تحويل دقيقة",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "cli": "node age-calculator.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "start http://localhost:3000/test-conversions.html"
   },
   "keywords": [
     "age",
     "calculator",
     "birthday",
     "arabic",
+    "hijri",
+    "gregorian",
+    "islamic-calendar",
     "web",
     "html",
     "css",

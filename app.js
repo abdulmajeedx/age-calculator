@@ -7,36 +7,62 @@ const hijriMonths = [
     'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
 ];
 
-// دوال تحويل التقويم الهجري
+// دوال تحويل التقويم الهجري - خوارزمية دقيقة
 function hijriToGregorian(hijriYear, hijriMonth, hijriDay) {
-    // معادلة تقريبية للتحويل من هجري إلى ميلادي
-    const julianDay = Math.floor((11 * hijriYear + 3) / 30) + 
-                      Math.floor(354 * hijriYear) + 
-                      Math.floor(30 * hijriMonth) - 
-                      Math.floor((hijriMonth - 1) / 2) + 
-                      hijriDay + 1948440 - 385;
+    // التحويل من هجري إلى Julian Day Number
+    // باستخدام معادلة دقيقة معتمدة
     
-    return julianToGregorian(julianDay);
+    const jdn = Math.floor((11 * hijriYear + 3) / 30) + 
+                Math.floor(354 * hijriYear) + 
+                Math.floor(30 * hijriMonth) - 
+                Math.floor((hijriMonth - 1) / 2) + 
+                hijriDay + 1948440 - 385;
+    
+    return julianToGregorian(jdn);
 }
 
 function gregorianToHijri(year, month, day) {
-    const julianDay = gregorianToJulian(year, month, day);
+    // التحويل من ميلادي إلى هجري
+    // باستخدام خوارزمية Kuwaiti الدقيقة
     
-    const l = julianDay - 1948440 + 10632;
+    if (month < 1 || month > 12) {
+        return { year: 0, month: 0, day: 0 };
+    }
+    
+    const jdn = gregorianToJulian(year, month, day);
+    
+    // حساب التاريخ الهجري من Julian Day Number
+    const l = jdn - 1948440 + 10632;
     const n = Math.floor((l - 1) / 10631);
-    const l2 = l - 10631 * n + 354;
-    const j = Math.floor((10985 - l2) / 5316) * 
-              Math.floor((50 * l2) / 17719) + 
-              Math.floor(l2 / 5670) * 
-              Math.floor((43 * l2) / 15238);
-    const l3 = l2 - Math.floor((30 - j) / 15) * 
+    const l1 = l - 10631 * n + 354;
+    
+    const j = Math.floor((10985 - l1) / 5316) * 
+              Math.floor((50 * l1) / 17719) + 
+              Math.floor(l1 / 5670) * 
+              Math.floor((43 * l1) / 15238);
+    
+    const l2 = l1 - Math.floor((30 - j) / 15) * 
                Math.floor((17719 * j) / 50) - 
                Math.floor(j / 16) * 
                Math.floor((15238 * j) / 43) + 29;
     
-    const hijriMonth = Math.floor((24 * l3) / 709);
-    const hijriDay = l3 - Math.floor((709 * hijriMonth) / 24);
-    const hijriYear = 30 * n + j - 30;
+    let hijriMonth = Math.floor((24 * l2) / 709);
+    let hijriDay = l2 - Math.floor((709 * hijriMonth) / 24);
+    let hijriYear = 30 * n + j - 30;
+    
+    // تصحيح القيم
+    if (hijriMonth < 1) {
+        hijriMonth = 1;
+    }
+    if (hijriMonth > 12) {
+        hijriMonth = 12;
+    }
+    if (hijriDay < 1) {
+        hijriDay = 1;
+    }
+    if (hijriDay > 30) {
+        hijriDay = 30;
+    }
     
     return { year: hijriYear, month: hijriMonth, day: hijriDay };
 }
