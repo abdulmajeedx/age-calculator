@@ -573,26 +573,6 @@ body {
     50% { transform: translateY(-5px); }
 }
 
-.made-with {
-    font-size: 1rem;
-    margin: 0;
-    opacity: 0.9;
-    font-weight: 500;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.heart {
-    color: #ff4081;
-    animation: heartbeat 1.5s infinite;
-    display: inline-block;
-}
-
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    10%, 30% { transform: scale(1.1); }
-    20%, 40% { transform: scale(1); }
-}
-
 @keyframes fadeInDown {
     from {
         opacity: 0;
